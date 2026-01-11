@@ -3,8 +3,10 @@ import Header from "./_components/header";
 import SearchInput from "./_components/search-input";
 import banner from "../public/banner.png";
 import BookingItem from "./_components/booking-item";
+import { prisma } from "@/lib/prisma";
 
-const Home = () => {
+const Home = async () => {
+  const barbershops = await prisma.barbershop.findMany();
   return (
     <main>
       <Header />
@@ -20,10 +22,14 @@ const Home = () => {
           Agendamentos
         </h2>
         <BookingItem
-        serviceName="Corte de cabelo"
-        barbershopName="Barbearia do João"
-        barbershopImgUrl="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png"
-        date={new Date()}/>
+          serviceName="Corte de cabelo"
+          barbershopName="Barbearia do João"
+          barbershopImgUrl="https://utfs.io/f/c97a2dc9-cf62-468b-a851-bfd2bdde775f-16p.png"
+          date={new Date()}
+        />
+        {barbershops.map((barbershop) => (
+          <h1 key={barbershop.id}>{barbershop.name}</h1>
+        ))}
       </div>
     </main>
   );
