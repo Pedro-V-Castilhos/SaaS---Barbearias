@@ -1,32 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { Toaster } from "./ui/sonner";
 import { Button } from "./ui/button";
+import { toast } from "sonner";
+import Form from "next/form";
 
 interface CopyButtonProps {
   text: string;
 }
 
 const CopyButton = ({ text }: CopyButtonProps) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
+  const handleCopy = () => {
     try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      navigator.clipboard.writeText(text);
+      toast.success("Texto copiado!");
     } catch (error) {
-      console.error("Failed to copy:", error);
+      toast.error("Falha ao copiar o texto: " + (error as Error).message);
     }
   };
 
   return (
-    <Button
-      onClick={handleCopy}
-      className="border-border text-foreground bg-background hover:bg-background rounded-full border border-solid px-4 py-2 text-sm leading-[1.4] font-bold"
-    >
-      {copied ? "Copiado" : "Copiar"}
-    </Button>
+    <Form action={handleCopy}>
+      <Button
+        type="submit"
+        className="border-border text-foreground bg-background hover:bg-background rounded-full border border-solid px-4 py-2 text-sm leading-[1.4] font-bold"
+      >
+        Copiar
+      </Button>
+      <Toaster />
+    </Form>
   );
 };
 
